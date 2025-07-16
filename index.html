@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Modular Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&family=Rajdhani:wght@700&display=swap" rel="stylesheet" />
+    <style>
+        /* Base & Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body {
+            background: linear-gradient(180deg, #021B3A 0%, #044675 60%, #0B3C5D 100%);
+            color: #CCEBF5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 140px;
+            position: relative;
+            user-select: none;
+            overflow-y: auto;
+        }
+
+        /* Intro Overlay Styles - High Tech */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0B3C5D 0%, #044675 70%, #021B3A 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+            overflow: hidden; /* Crucial for contained animations */
+
+            /* Advanced background for intro overlay */
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.05) 0%, transparent 70%),
+                repeating-linear-gradient(0deg, transparent 0%, rgba(0,255,255,0.02) 1px, transparent 2px, transparent 20px),
+                repeating-linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.02) 1px, transparent 2px, transparent 20px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            animation: backgroundFlow 20s linear infinite;
+        }
+
+        @keyframes backgroundFlow {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 40px 40px, 40px 40px; }
+        }
+
+        #intro-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none; /* Disable interaction during fade-out */
+        }
+
+        /* Scanline effect for entire intro */
+        #intro-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10000;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            opacity: 0; /* Hidden by default */
+            animation: scanlineFadeIn 0.5s ease-in forwards 2s; /* Appears after 2 seconds */
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes scanlineFadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Main Welcome Text */
+        .intro-text-line {
+            font-size: 7vw; /* Responsive font size */
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #00e5ff; /* Brighter, techy color */
+            text-shadow:
+                0 0 8px rgba(0,255,255,0.8),
+                0 0 20px rgba(0,255,255,0.6),
+                0 0 40px rgba(0,255,255,0.4); /* Enhanced glow */
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0 auto;
+            letter-spacing: 0.1em;
+            display: flex; /* For character-by-character animation */
+            perspective: 1000px; /* For 3D transforms */
+            filter: blur(0); /* For blur effect */
+            transition: filter 0.3s ease-out; /* Smooth blur transition */
+        }
+
+        /* Individual character animation for welcome */
+        .intro-text-line span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px) rotateX(-90deg) scale(0.8);
+            animation: characterReveal 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; /* Custom bounce-like timing */
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes characterReveal {
+            0% { opacity: 0; transform: translateY(20px) rotateX(-90deg) scale(0.8); filter: blur(5px); }
+            60% { opacity: 1; transform: translateY(-5px) rotateX(10deg) scale(1.05); filter: blur(0px); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); filter: blur(0px); }
+        }
+
+        /* Subtext - Loading... */
+        .intro-subtext {
+            font-family: 'Share Tech Mono', monospace; /* Monospaced tech font */
+            font-size: 1.8vw; /* Responsive font size */
+            margin-top: 30px;
+            color: #99FFFF; /* Lighter techy color */
+            text-shadow: 0 0 10px rgba(153,255,255,0.6);
+            opacity: 0;
+            border-right: .08em solid #99FFFF; /* Typing cursor */
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0; /* Starts as 0 width for typing effect */
+            animation:
+                typing 1.5s steps(30, end) forwards; /* Typing speed */
+            animation-delay: 2s; /* Starts after Welcome */
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes typing {
+            from { width: 0; opacity: 0;}
+            to { width: 100%; opacity: 1;}
+        }
+
+        /* Powered by text */
+        .intro-powered-by {
+            font-family: 'Rajdhani', sans-serif; /* Another techy font */
+            font-size: 1.5vw;
+            margin-top: 40px;
+            color: #00ff7f; /* Greenish glow */
+            text-shadow: 0 0 10px #00ff7f, 0 0 20px rgba(0,255,127,0.5);
+            opacity: 0;
+            transform: scale(0.5);
+            animation: poweredByZoomIn 0.8s ease-out forwards;
+            animation-delay: 4s; /* Starts after subtext typing */
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes poweredByZoomIn {
+            0% { opacity: 0; transform: scale(0.5); filter: blur(10px); }
+            50% { opacity: 1; transform: scale(1.1); filter: blur(0px); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Glitch Effect for the whole intro - apply near the end */
+        .intro-glitch-active {
+            animation: overallGlitch 0.5s linear infinite alternate;
+            animation-delay: 4.5s; /* Glitches slightly before fade out */
+        }
+
+        @keyframes overallGlitch {
+            0% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(-2px, 2px);
+                filter: hue-rotate(5deg);
+                opacity: 0.95;
+            }
+            40% {
+                transform: translate(1px, -1px);
+                filter: hue-rotate(-5deg);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(-1px, 1px);
+                filter: hue-rotate(10deg);
+                opacity: 0.9;
+            }
+            80% {
+                transform: translate(2px, -2px);
+                filter: hue-rotate(-10deg);
+                opacity: 0.98;
+            }
+            100% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+
+        /* Main Content styles - Initially hidden */
+        #main-content {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 140px; /* To account for the robot container */
+            min-height: 100vh;
+            position: relative;
+            z-index: 1; /* Ensure it's above other elements if needed */
+        }
+
+        /* Gaming-style Ocean Heading */
+        #gaming-style-heading {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 4.2rem;
+            text-transform: uppercase;
+            position: relative;
+            letter-spacing: 0.08em;
+            user-select: none;
+            cursor: default;
+            background: linear-gradient(45deg, #00c6ff, #0052d4, #7300ff, #a200ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: #00c6ff; /* fallback color */
+            text-shadow:
+                2px 2px 0 #001428,
+                4px 4px 0 #003d7a,
+                6px 6px 0 #5a0bd4,
+                8px 8px 6px rgba(0,0,0,0.8);
+            transform: skewX(-6deg);
+            margin: 32px 0 24px;
+            transition: text-shadow 0.3s ease;
+            user-select: none;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            z-index: 10;
+            overflow: visible;
+        }
+        @keyframes glow {
+            0%, 100% {
+                text-shadow:
+                    2px 2px 0 #001428,
+                    4px 4px 0 #003d7a,
+                    6px 6px 0 #5a0bd4,
+                    8px 8px 8px rgba(98, 0, 255, 0.9);
+            }
+            50% {
+                text-shadow:
+                    3px 3px 2px #001428,
+                    6px 6px 3px #0046b5,
+                    9px 9px 4px #6600cc,
+                    12px 12px 12px rgba(130, 0, 255, 1);
+            }
+        }
+        #gaming-style-heading.glowing {
+            animation: glow 3.5s ease-in-out infinite;
+        }
+        /* Light rays behind heading */
+        #gaming-style-heading::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            transform: translate(-50%, -50%);
+            background:
+                radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 80%),
+                repeating-conic-gradient(from 0deg, rgba(0, 200, 255, 0.15) 0deg 10deg, transparent 10deg 20deg);
+            border-radius: 50%;
+            filter: blur(12px);
+            pointer-events: none;
+            z-index: -1;
+            animation: spinRays 25s linear infinite;
+        }
+        @keyframes spinRays {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            background: rgba(255,255,255,0.1); padding: 12px 18px;
+            border-radius: 14px; backdrop-filter: blur(10px);
+            box-shadow: 0 6px 20px rgba(0,200,255,0.2);
+            margin-bottom: 20px; width: 90%; max-width: 720px;
+            user-select:none;
+            justify-content: center;
+            align-items: center;
+        }
+        .controls label, .controls select, .controls button {
+            padding: 10px 14px; border: none; border-radius: 8px;
+            font-size: 1rem; cursor: pointer; user-select: none;
+        }
+        .controls label, .controls button {
+            background: linear-gradient(90deg, #00d4ff, #0178ff);
+            color: white;
+            transition: opacity 0.2s ease;
+        }
+        .controls select {
+            background: rgba(255,255,255,0.2);
+            color: #022b3a;
+        }
+        .controls label:hover, .controls button:hover, .controls select:hover {
+            opacity: 0.85;
+        }
+        #upload { display: none; }
+
+        /* New category input for adding categories */
+        #new-category {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            max-width: 240px;
+            background: rgba(255,255,255,0.2);
+            color: #022b3a;
+            user-select:none;
+        }
+        #add-category-btn {
+            background: linear-gradient(90deg, #00ffcc, #0078ff);
+            color: #022b3a;
+            font-weight: 700;
+        }
+
+        /* Categories container */
+        #categories {
+            width: 90%; max-width: 900px; display: flex; flex-direction: column; gap: 30px;
+            margin-bottom: 60px;
+        }
+        .category {
+            background: rgba(255,255,255,0.05); border-radius: 16px;
+            padding: 20px; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,200,255,0.2);
+            user-select:none;
+            position: relative;
+        }
+        .category header {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 20px;
+        }
+        .category h2 {
+            font-size: 1.5rem; color: #ABE7FF;
+            flex-grow: 1;
+            cursor: default;
+        }
+        .category h2[contenteditable="true"] {
+            outline: 2px solid #0078ff88;
+            border-radius: 6px;
+            padding: 4px 8px;
+            background: rgba(0,120,255,0.15);
+            cursor: text;
+            user-select:text;
+        }
+        .category .rename {
+            background: #DFF;
+            color: #022b3a;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            user-select:none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .category .delete-category-btn {
+            background: linear-gradient(90deg, #ff6b6b, #e04343);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            user-select: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;
+        }
+        .gallery .imgbox {
+            position: relative; width: 160px; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer; transition: transform .3s;
+            background: linear-gradient(135deg, #0078ff 0%, #00d4ff 100%);
+            user-select:none;
+        }
+        .gallery .imgbox:hover { transform: scale(1.05); }
+        .gallery img {
+            width: 100%; display: block; user-select:none;
+            border-radius: 12px;
+            pointer-events:none;
+        }
+        .gallery .del {
+            position: absolute; top: 6px; right: 6px; background: rgba(255,0,0,0.85);
+            border: none; color: white; border-radius: 50%; width: 26px; height:26px;
+            cursor: pointer; font-size: 1.25rem; font-weight: 900;
+            user-select:none;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 8px rgba(255,0,0,0.9);
+            transition: background-color 0.3s ease;
+            z-index: 3;
+        }
+        .gallery .del:hover {
+            background: rgba(255, 50, 50, 1);
+            box-shadow: 0 0 14px rgba(255, 80, 80, 1);
+        }
+
+        /* Modal */
+        #modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            justify-content: center; align-items: center;
+            z-index: 1000;
+            user-select:none;
+        }
+        #modal img {
+            max-width: 90vw; max-height: 90vh; border-radius: 12px;
+            box-shadow: 0 0 20px #00aaffcc;
+            border: 3px solid #0099ff88;
+        }
+
+        /* Bubbles */
+        .bubble {
+            position: absolute; border-radius:50%; background: rgba(255,255,255,0.15);
+            animation: rise 8s infinite ease-in;
+            pointer-events:none;
+            filter: drop-shadow(0 0 2px #00aaff88);
+            opacity: 0.4;
+            mix-blend-mode: screen;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(0.5); opacity:0.4 }
+            100% { transform: translateY(-120vh) scale(1); opacity:0 }
+        }
+
+        /* Waves bottom */
+        #waves {
+            position: fixed; bottom:0; left:0; width:100%; height:120px; z-index:0;
+            pointer-events:none;
+            user-select:none;
+        }
+        #waves svg path {
+            animation: waveMove 8s ease-in-out infinite alternate;
+            transform-origin: center bottom;
+        }
+        @keyframes waveMove {
+            0% { transform: translateX(0) }
+            100% { transform: translateX(-40px) }
+        }
+
+        /* Robot container */
+        .robot-container {
+            position: fixed;
+            bottom: 18px; right: 18px;
+            width: 320px; max-width: 90vw;
+            background: linear-gradient(135deg, #004a8fbb 0%, #00326acc 100%);
+            border-radius: 24px;
+            padding: 18px 22px 18px 100px;
+            box-shadow: 0 0 18px #00aaffcc;
+            backdrop-filter: blur(14px);
+            color: #d9f0ff;
+            font-weight: 600;
+            font-size: 1rem;
+            user-select:none;
+            display: flex; align-items: center;
+            gap: 14px;
+            filter: drop-shadow(0 0 10px #00aaffcc);
+            overflow: visible;
+            cursor: default;
+            z-index: 9999;
+            animation: rippleGlow 6s ease-in-out infinite alternate;
+        }
+        @keyframes rippleGlow {
+            0% { box-shadow: 0 0 18px #00aaffcc; }
+            100% { box-shadow: 0 0 30px #33bbffdd; }
+        }
+        .robot-container:before {
+            content: "";
+            position: absolute;
+            left: 30px; top: 10px; bottom: 10px;
+            width: 60px;
+            background: radial-gradient(circle, #0099ff88 40%, transparent 80%);
+            border-radius: 50%;
+            filter: blur(18px);
+            z-index: 0;
+            pointer-events:none;
+        }
+
+        /* Robot figure */
+        .robot {
+            position: absolute;
+            left: 18px; top: 50%;
+            transform: translateY(-50%);
+            width: 72px; height: 72px;
+            background: linear-gradient(145deg, #00a8ff, #005da0);
+            border-radius: 40% 60% 50% 50% / 60% 70% 30% 40%;
+            box-shadow: 0 0 10px #007fffcc;
+            filter: drop-shadow(0 0 4px #00aaffcc);
+            z-index: 1;
+            pointer-events:none;
+            user-select:none;
+        }
+        .robot .mouth {
+            position: absolute;
+            bottom: 22px; left: 50%;
+            width: 32px; height: 12px;
+            background: linear-gradient(90deg, #00bbff, #005a9f);
+            border-radius: 12px;
+            box-shadow: 0 0 6px #00aaffcc;
+            transform: translateX(-50%);
+        }
+        .robot .arm {
+            position: absolute;
+            width: 22px; height: 60px;
+            background: #0077ff;
+            top: 25%;
+            left: -22px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px #00a1ff;
+            transform-origin: top center;
+            animation: waveArm 2s ease-in-out infinite alternate;
+            pointer-events:none;
+        }
+        @keyframes waveArm {
+            0% { transform: rotate(10deg);}
+            100% { transform: rotate(-30deg);}
+        }
+
+        /* Speech bubble */
+        .speech-bubble {
+            max-width: 260px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #d9f0ff;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: 0 0 12px #00b3ff88;
+            user-select:none;
+            font-weight: 600;
+            text-align: left;
+            position: relative;
+            filter: drop-shadow(0 0 5px #00aaff);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            z-index: 2;
+        }
+        /* Speech bubble arrow */
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: 12px;
+            right: -16px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-left: 16px solid rgba(255,255,255,0.15);
+            border-bottom: 10px solid transparent;
+            filter: drop-shadow(0 0 2px #00aaff);
+        }
+
+        /* Fish swimming animation */
+        .fish {
+            position: fixed;
+            bottom: 60px;
+            width: 60px; height: 36px;
+            background: linear-gradient(90deg, #0069ff 0%, #00e5ff 100%);
+            border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+            box-shadow: 0 0 12px #00aaffcc;
+            filter: drop-shadow(0 0 6px #00aaffcc);
+            opacity: 0.85;
+            user-select:none;
+            pointer-events:none;
+            animation-timing-function: linear;
+            z-index: 0;
+        }
+        .fish::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 6px;
+            width: 20px; height: 20px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: inset 0 0 6px #00bbff;
+        }
+        .fish::after {
+            content: '';
+            position: absolute;
+            top: 12px; right: 6px;
+            width: 12px; height: 18px;
+            background: linear-gradient(45deg, #007fff, #00bbff);
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            border-radius: 12px;
+        }
+
+        /* Multiple fish animations with delays */
+        .fish.fish1 {
+            bottom: 60px;
+            animation: swimRight 40s linear infinite;
+            left: -80px;
+        }
+        .fish.fish2 {
+            bottom: 110px;
+            animation: swimRight 35s linear infinite;
+            left: -60px;
+            opacity: 0.7;
+            transform: scale(0.8);
+        }
+        .fish.fish3 {
+            bottom: 150px;
+            animation: swimRight 45s linear infinite;
+            left: -100px;
+            opacity: 0.6;
+            transform: scale(1.1);
+        }
+        @keyframes swimRight {
+            0% { left: -100px; }
+            100% { left: 110vw; }
+        }
+
+        /* Accessibility & helper */
+        .sr-only {
+            position: absolute !important;
+            width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0);
+            white-space: nowrap; border: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <div class="intro-text-line" id="welcome-text">Welcome</div>
+        <div class="intro-subtext" id="loading-text">Loading Modular Submission...</div>
+        <div class="intro-powered-by" id="powered-by-text">Powered by Earl Leyson</div>
+    </div>
+
+    <div id="main-content">
+        <h1 id="gaming-style-heading" class="glowing" tabindex="0">MODULAR SUBMISSION</h1>
+
+        <div class="controls" role="region" aria-label="Upload controls">
+            <label for="category-select" tabindex="0" aria-label="Select image category">Category:</label>
+            <select id="category-select" aria-describedby="category-help" aria-live="polite" aria-atomic="true" aria-label="Select existing category">
+            </select>
+            <span id="category-help" class="sr-only">Choose the category to upload images into</span>
+
+            <label for="upload" role="button" tabindex="0" aria-label="Upload image file">Upload Image</label>
+            <input type="file" id="upload" accept="image/*" aria-describedby="upload-help" multiple />
+            <span id="upload-help" class="sr-only">Choose one or more image files to upload</span>
+
+            <input type="text" id="new-category" placeholder="Add new category..." aria-label="New category name" />
+            <button id="add-category-btn" aria-label="Add new category button">Add Category</button>
+        </div>
+
+        <div id="categories" aria-live="polite" aria-atomic="true">
+        </div>
+
+        <div class="robot-container" aria-live="polite" aria-atomic="true" role="complementary" aria-label="Robot assistant with messages" tabindex="0">
+            <div class="speech-bubble" id="robot-message" aria-live="polite" aria-atomic="true" role="region" tabindex="0"></div>
+            <div class="robot" aria-hidden="true">
+                <div class="arm"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div id="waves" aria-hidden="true">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none" >
+                <path fill="#0078FF" fill-opacity="0.6" d="M0,224L30,213.3C60,203,120,181,180,160C240,139,300,117,360,122.7C420,128,480,160,540,165.3C600,171,660,149,720,133.3C780,117,840,107,900,122.7C960,139,1020,181,1080,197.3C1140,213,1200,203,1260,176C1320,149,1380,107,1410,85.3L1440,64L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
+            </svg>
+        </div>
+
+        <div id="modal" role="dialog" aria-modal="true" aria-label="Image preview" tabindex="-1">
+            <img src="" alt="Preview image" />
+        </div>
+
+        <div class="fish fish1" aria-hidden="true"></div>
+        <div class="fish fish2" aria-hidden="true"></div>
+        <div class="fish fish3" aria-hidden="true"></div>
+    </div>
+
+    <script defer>
+        // Intro Animation Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const introOverlay = document.getElementById('intro-overlay');
+            const welcomeText = document.getElementById('welcome-text');
+            const loadingText = document.getElementById('loading-text');
+            const poweredByText = document.getElementById('powered-by-text');
+            const mainContent = document.getElementById('main-content');
+
+            // Function to wrap each character in a span for individual animation
+            const wrapCharacters = (element) => {
+                const text = element.textContent;
+                element.innerHTML = ''; // Clear original text
+                text.split('').forEach((char, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    // Apply delay to each character for staggered reveal
+                    span.style.animationDelay = `${index * 0.08}s`; // Stagger each character by 80ms
+                    element.appendChild(span);
+                });
+            };
+
+            // Apply character wrapping to welcome text
+            wrapCharacters(welcomeText);
+
+            // Start intro sequence
+            const startIntro = async () => {
+                // Phase 1: Welcome Text (0-2s)
+                // Character reveals are handled by CSS animation-delay on spans
+                // The welcomeText itself is already visible by default
+
+                // Phase 2: Loading text typing and scanline (2-4s)
+                setTimeout(() => {
+                    loadingText.style.opacity = 1; // Make it visible before typing starts
+                    // Typing animation is handled by CSS (width: 0 to 100%)
+                    // Scanline effect also starts via CSS animation-delay on ::before
+                }, 2000);
+
+                // Phase 3: Powered by Earl Leyson (4-5s)
+                setTimeout(() => {
+                    poweredByText.style.opacity = 1; // Make it visible
+                    // Zoom-in animation handled by CSS
+                    introOverlay.classList.add('intro-glitch-active'); // Add glitch effect
+                }, 4000);
+
+                // Overall fade out (starts at 5s, lasts 1s)
+                setTimeout(() => {
+                    introOverlay.classList.add('fade-out');
+                    introOverlay.addEventListener('transitionend', () => {
+                        introOverlay.style.display = 'none'; // Completely hide after fade-out
+                        mainContent.style.display = 'flex'; // Show the main content
+                        // Ensure the main content takes up full body space again after intro hides
+                        document.body.style.display = 'flex';
+                        document.body.style.flexDirection = 'column';
+                        document.body.style.alignItems = 'center';
+                    }, { once: true });
+                }, 5000); // Total intro duration 5 seconds
+            };
+
+            startIntro(); // Initiate the intro sequence on DOMContentLoaded
+        });
+
+
+        // -- Credits and author info --
+        const AUTHOR = "Earl Leyson";
+        const BOT_NAME = "Cath Bactong";
+
+        // Keys for local storage
+        const CATEGORIES_STORAGE_KEY = 'modularSubmissionCategories';
+        const IMAGES_STORAGE_KEY = 'modularSubmissionImages';
+
+        // Load data from local storage or set initial defaults
+        let categories = loadCategories();
+        let images = loadImages();
+
+        // DOM Elements
+        const categorySelect = document.getElementById('category-select');
+        const uploadInput = document.getElementById('upload');
+        const newCategoryInput = document.getElementById('new-category');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        const categoriesContainer = document.getElementById('categories');
+        const modal = document.getElementById('modal');
+        const modalImg = document.querySelector('#modal img');
+        const robotMessage = document.getElementById('robot-message');
+
+        // Helper function to save categories to local storage
+        function saveCategories() {
+            localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(categories));
+        }
+
+        // Helper function to load categories from local storage
+        function loadCategories() {
+            const storedCategories = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+            return storedCategories ? JSON.parse(storedCategories) : [
+                { id: 'modular', name: 'Modular' },
+                { id: 'gaming', name: 'Gaming' },
+                { id: 'fun', name: 'Fun' }
+            ];
+        }
+
+        // Helper function to save images to local storage
+        function saveImages() {
+            localStorage.setItem(IMAGES_STORAGE_KEY, JSON.stringify(images));
+        }
+
+        // Helper function to load images from local storage
+        function loadImages() {
+            const storedImages = localStorage.getItem(IMAGES_STORAGE_KEY);
+            return storedImages ? JSON.parse(storedImages) : {
+                modular: [],
+                gaming: [],
+                fun: []
+            };
+        }
+
+        // Function to update the category dropdown
+        function updateCategorySelect() {
+            categorySelect.innerHTML = ''; // Clear existing options
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                categorySelect.appendChild(option);
+            });
+            // Select the first category by default if available
+            if (categories.length > 0) {
+                categorySelect.value = categories[0].id;
+            }
+        }
+
+        // Function to display robot messages
+        function displayRobotMessage(message) {
+            robotMessage.textContent = message;
+        }
+
+        // Function to render all categories and their images
+        function renderCategories() {
+            categoriesContainer.innerHTML = ''; // Clear current display
+            if (categories.length === 0) {
+                displayRobotMessage("It looks a bit empty here! Add your first category using the input field above.");
+                return;
+            }
+
+            categories.forEach(cat => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.classList.add('category');
+                categoryDiv.dataset.categoryId = cat.id; // Store category ID
+
+                categoryDiv.innerHTML = `
+                    <header>
+                        <h2 contenteditable="false">${cat.name}</h2>
+                        <button class="rename" aria-label="Rename category">Rename</button>
+                        <button class="delete-category-btn" aria-label="Delete category">Delete</button>
+                    </header>
+                    <div class="gallery"></div>
+                `;
+
+                const galleryDiv = categoryDiv.querySelector('.gallery');
+                const catImages = images[cat.id] || []; // Get images for this category
+
+                if (catImages.length === 0) {
+                    const noImagesMessage = document.createElement('p');
+                    noImagesMessage.textContent = `No images in the '${cat.name}' category yet. Upload some!`;
+                    noImagesMessage.style.color = '#aaeef5';
+                    noImagesMessage.style.marginTop = '15px';
+                    noImagesMessage.style.fontSize = '0.9em';
+                    galleryDiv.appendChild(noImagesMessage);
+                } else {
+                    catImages.forEach((imgSrc, index) => {
+                        const imgBox = document.createElement('div');
+                        imgBox.classList.add('imgbox');
+                        imgBox.innerHTML = `
+                            <img src="${imgSrc}" alt="Image in ${cat.name} category" data-index="${index}" />
+                            <button class="del" aria-label="Delete image">&times;</button>
+                        `;
+                        galleryDiv.appendChild(imgBox);
+                    });
+                }
+
+                categoriesContainer.appendChild(categoryDiv);
+            });
+            displayRobotMessage("All categories and images loaded. You're ready to go!");
+        }
+
+        // Event Listeners
+
+        // Add Category
+        addCategoryBtn.addEventListener('click', () => {
+            const newCatName = newCategoryInput.value.trim();
+            if (newCatName) {
+                const newCatId = newCatName.toLowerCase().replace(/\s+/g, '-');
+                if (!categories.some(cat => cat.id === newCatId)) {
+                    categories.push({ id: newCatId, name: newCatName });
+                    images[newCatId] = []; // Initialize an empty array for new category's images
+                    saveCategories();
+                    saveImages(); // Save images as well, so the new category key is there
+                    updateCategorySelect();
+                    renderCategories();
+                    newCategoryInput.value = '';
+                    displayRobotMessage(`Category "${newCatName}" added successfully!`);
+                } else {
+                    displayRobotMessage(`Category "${newCatName}" already exists.`);
+                }
+            } else {
+                displayRobotMessage("Please enter a category name.");
+            }
+        });
+
+        // Upload Image
+        uploadInput.addEventListener('change', (event) => {
+            const selectedCategory = categorySelect.value;
+            if (!selectedCategory) {
+                displayRobotMessage("Please select a category before uploading images.");
+                return;
+            }
+
+            const files = event.target.files;
+            if (files.length === 0) {
+                return;
+            }
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (!images[selectedCategory]) {
+                        images[selectedCategory] = []; // Ensure the array exists for the category
+                    }
+                    images[selectedCategory].push(e.target.result); // Base64 string
+                    saveImages();
+                    renderCategories(); // Re-render to show the new image
+                    displayRobotMessage(`Image uploaded to "${categories.find(c => c.id === selectedCategory)?.name}"!`);
+                };
+                reader.readAsDataURL(file); // Convert image to Base64
+            });
+        });
+
+        // Delegate events for dynamically created elements
+        categoriesContainer.addEventListener('click', (event) => {
+            // Delete Image
+            if (event.target.classList.contains('del')) {
+                const imgBox = event.target.closest('.imgbox');
+                const categoryDiv = event.target.closest('.category');
+                const categoryId = categoryDiv.dataset.categoryId;
+                const imgIndex = parseInt(imgBox.querySelector('img').dataset.index);
+
+                if (confirm('Are you sure you want to delete this image?')) {
+                    if (images[categoryId] && images[categoryId].length > imgIndex) {
+                        images[categoryId].splice(imgIndex, 1); // Remove from array
+                        saveImages();
+                        renderCategories(); // Re-render to update the display
+                        displayRobotMessage("Image deleted!");
+                    }
+                }
+            }
+
+            // Open Modal for Image
+            if (event.target.tagName === 'IMG' && event.target.closest('.imgbox')) {
+                modalImg.src = event.target.src;
+                modal.style.display = 'flex';
+                modal.focus(); // Focus the modal for accessibility
+            }
+
+            // Rename Category
+            if (event.target.classList.contains('rename')) {
+                const categoryDiv = event.target.closest('.category');
+                const categoryId = categoryDiv.dataset.categoryId;
+                const heading = categoryDiv.querySelector('h2');
+
+                if (heading.contentEditable === 'true') {
+                    // Save changes
+                    heading.contentEditable = 'false';
+                    event.target.textContent = 'Rename';
+                    event.target.style.background = '#DFF'; // Reset button style
+
+                    const newName = heading.textContent.trim();
+                    if (newName && newName !== categories.find(c => c.id === categoryId)?.name) {
+                        const existingCategory = categories.find(c => c.id === categoryId);
+                        if (existingCategory) {
+                            existingCategory.name = newName;
+                            saveCategories();
+                            updateCategorySelect(); // Update dropdown with new name
+                            displayRobotMessage(`Category "${existingCategory.name}" renamed!`);
+                        }
+                    } else {
+                         displayRobotMessage("Category name cannot be empty or unchanged.");
+                         renderCategories(); // Re-render to revert to original if empty
+                    }
+
+                } else {
+                    // Enable editing
+                    heading.contentEditable = 'true';
+                    heading.focus();
+                    event.target.textContent = 'Save';
+                    event.target.style.background = '#00ffcc'; // Highlight button
+                    displayRobotMessage("Now editing category name. Press 'Save' when done.");
+                }
+            }
+
+            // Delete Category
+            if (event.target.classList.contains('delete-category-btn')) {
+                const categoryDiv = event.target.closest('.category');
+                const categoryIdToDelete = categoryDiv.dataset.categoryId;
+
+                if (confirm(`Are you sure you want to delete the category "${categories.find(c => c.id === categoryIdToDelete)?.name}" and all its images? This cannot be undone.`)) {
+                    // Remove category from categories array
+                    categories = categories.filter(cat => cat.id !== categoryIdToDelete);
+                    saveCategories();
+
+                    // Remove images for that category
+                    delete images[categoryIdToDelete];
+                    saveImages();
+
+                    updateCategorySelect(); // Update dropdown after deletion
+                    renderCategories(); // Re-render to reflect changes
+                    displayRobotMessage("Category and its images deleted!");
+                }
+            }
+        });
+
+        // Close Modal
+        modal.addEventListener('click', (event) => {
+            // Close if clicking outside the image
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        // Also close modal with Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+
+
+        // Initial rendering on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCategorySelect();
+            renderCategories();
+            // Start the fish and bubble animations
+            setupBackgroundAnimations();
+        });
+
+
+        // --- Background Animations (Bubbles & Fish) ---
+        function setupBackgroundAnimations() {
+            // Generate random bubbles
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                bubble.style.width = `${Math.random() * 30 + 10}px`; // 10-40px
+                bubble.style.height = bubble.style.width;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5-10s
+                bubble.style.animationDelay = `${Math.random() * 5}s`; // Stagger start
+                document.body.appendChild(bubble);
+            }
+        }
+    </script>
+</body>
+</html>
